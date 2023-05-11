@@ -32,6 +32,9 @@ def get_rows(table_id):
 
 @login_required
 def lgsp_email(request, pnr):
+  current_user = request.user
+  name = current_user.first_name + " "+ current_user.last_name
+
   try:
      # , conversation_id, message_id, #table id, pnr
     #   print("pnr:", pnr)
@@ -77,7 +80,7 @@ def lgsp_email(request, pnr):
             email_list.append(api_response_message)
     print(same_pnr_list)
     return render(request, 'email_structure.html',{'api_response_message':email_list,
-                                                'datatable_row': datatable_row})
+                                                'datatable_row': datatable_row, 'name':name})
   except:
     messages.error(request, 'Error occured in PNR number')
     return redirect('all_pnr_list')
@@ -85,6 +88,8 @@ def lgsp_email(request, pnr):
 
 @login_required
 def all_pnr_list(request):
+    current_user = request.user
+    name = current_user.first_name + " "+ current_user.last_name
     # api_message_instance = PureCloudPlatformClientV2.ConversationsApi(api_client)
     api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('555b6666-9eee-4cac-ba82-9064d1ba4c39','xZWWCWkWEf428WS4S8ALYFK-mmcZUKHQ9kCH0BeL2s8')
 
@@ -108,11 +113,13 @@ def all_pnr_list(request):
 
     print(row_list)    
 
-    return render(request, 'view_email.html', {'row_list': row_list})
+    return render(request, 'view_email.html', {'row_list': row_list, 'name':name})
 
 
 @login_required
 def add_pnr(request):
+    current_user = request.user
+    name = current_user.first_name + " "+ current_user.last_name
     
     if request.method == 'POST':
         new_pnr = str(request.POST.get('new_pnr'))
@@ -166,7 +173,7 @@ def add_pnr(request):
         print(new_pnr, new_sender_email, new_message_id, new_conversation_id)
 
 
-    return render(request, 'add_pnr.html')
+    return render(request, 'add_pnr.html',{'name':name})
 
 
 def login_page(request):
