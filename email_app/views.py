@@ -10,10 +10,10 @@ from django.contrib.auth import logout
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
+api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('682b4a94-5e61-4219-b399-e52764c8da30','u0FlpCfcvHgcnuywg0c_y3dLxee6cllDEq-YyO_0dkA')
 
 
 def get_rows(table_id):
-    api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('555b6666-9eee-4cac-ba82-9064d1ba4c39','xZWWCWkWEf428WS4S8ALYFK-mmcZUKHQ9kCH0BeL2s8')
     api_instance = PureCloudPlatformClientV2.ArchitectApi(api_client)
     datatable_id = table_id # str | id of datatable
     page_number = 1 # int | Page number (optional) (default to 1)
@@ -38,7 +38,6 @@ def lgsp_email(request, pnr):
   try:
      # , conversation_id, message_id, #table id, pnr
     #   print("pnr:", pnr)
-    api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('555b6666-9eee-4cac-ba82-9064d1ba4c39','xZWWCWkWEf428WS4S8ALYFK-mmcZUKHQ9kCH0BeL2s8')
   
   
     api_message_instance = PureCloudPlatformClientV2.ConversationsApi(api_client)
@@ -83,7 +82,7 @@ def lgsp_email(request, pnr):
                                                 'datatable_row': datatable_row, 'name':name})
   except:
     messages.error(request, 'Error occured in PNR number')
-    return redirect('all_pnr_list')
+    return redirect('view_email')
 
 
 @login_required
@@ -91,7 +90,6 @@ def all_pnr_list(request):
     current_user = request.user
     name = current_user.first_name + " "+ current_user.last_name
     # api_message_instance = PureCloudPlatformClientV2.ConversationsApi(api_client)
-    api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('555b6666-9eee-4cac-ba82-9064d1ba4c39','xZWWCWkWEf428WS4S8ALYFK-mmcZUKHQ9kCH0BeL2s8')
 
     conversation_id = '7423a681-8186-44d4-9385-ca2c80acdd9e' # str | conversationId
     message_id = 'deb55674-868c-4513-b18d-af41b9e12625' # str | messageId
@@ -129,7 +127,6 @@ def add_pnr(request):
 
         datatable_id = 'b6abbb1b-10da-4f44-9794-49253bb07748'
         datatable_row = get_rows(datatable_id)
-        api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('555b6666-9eee-4cac-ba82-9064d1ba4c39','xZWWCWkWEf428WS4S8ALYFK-mmcZUKHQ9kCH0BeL2s8')
         api_instance = PureCloudPlatformClientV2.ArchitectApi(api_client)
 
         for i in datatable_row.entities:
@@ -152,7 +149,7 @@ def add_pnr(request):
                 try:
                     api_response = api_instance.put_flows_datatable_row(datatable_id, row_id, body=body)
                     messages.error(request, 'Successfully Updated')
-                    return redirect('all_pnr_list')
+                    return redirect('view_email')
                 except :
                     # messages.error(request, 'Please provide correct input')
                     return redirect('add_pnr')
@@ -167,7 +164,7 @@ def add_pnr(request):
                     # Create a new row entry for the datatable.
                     api_response = api_instance.post_flows_datatable_rows(datatable_id, data_table_row)
                     messages.error(request, 'Successfully Updated')
-                    return redirect('all_pnr_list')
+                    return redirect('view_email')
                 except ApiException as e:
                     print("Exception when calling ArchitectApi->post_flows_datatable_rows: %s\n" % e)
         print(new_pnr, new_sender_email, new_message_id, new_conversation_id)
@@ -188,7 +185,7 @@ def login_page(request):
 
             login(request, user)
             # Redirect to a success page.
-            return redirect('all_pnr_list')
+            return redirect('view_email')
         else:
             messages.error(request, 'Invalid username or password')
             return render(request, 'login_page.html')
