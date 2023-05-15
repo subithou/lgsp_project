@@ -10,7 +10,7 @@ from django.contrib.auth import logout
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
-api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('682b4a94-5e61-4219-b399-e52764c8da30','u0FlpCfcvHgcnuywg0c_y3dLxee6cllDEq-YyO_0dkA')
+api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('682b4a94-5e61-4219-b399-e52764c8da30','9c7Op9xuqC2NXlgUfXywP5YyClYzEbhu_FChShRQOtY')
 
 
 def get_rows(table_id):
@@ -27,15 +27,15 @@ def get_rows(table_id):
         return api_response
     except ApiException as e:
         print("Exception when calling ArchitectApi->get_flows_datatable_rows: %s\n" % e)
-        return null
+        return redirect('view_email')
 
 
 @login_required
 def lgsp_email(request, pnr):
-  current_user = request.user
-  name = current_user.first_name + " "+ current_user.last_name
+    current_user = request.user
+    name = current_user.first_name + " "+ current_user.last_name
 
-  try:
+#   try:
      # , conversation_id, message_id, #table id, pnr
     #   print("pnr:", pnr)
   
@@ -74,15 +74,26 @@ def lgsp_email(request, pnr):
             print(api_row_info)
             print(api_row_info.get('conversation_id'))
             conversation_id = api_row_info.get('key')
-            message_id = api_row_info.get('message_id')
-            api_response_message = api_message_instance.get_conversations_email_message(conversation_id, message_id)
-            email_list.append(api_response_message)
+            # message_id = api_row_info.get('message_id')
+
+            api_all_email = PureCloudPlatformClientV2.ConversationsApi(api_client)
+            api_response_all_message_id = api_all_email.get_conversations_email_messages(conversation_id)
+            all_message_id = []
+            print('hi')
+            # print(api_response_all_message_id, type(api_response_all_message_id))
+            for p in api_response_all_message_id.entities:
+                    msg_id = p.id
+                    api_response_message = api_message_instance.get_conversations_email_message(conversation_id, msg_id)
+                    all_message_id.append(api_response_message)
+            # email_list.append(api_response_message)
+            print(all_message_id)
+            email_list.append(all_message_id)
     print(same_pnr_list)
     return render(request, 'email_structure.html',{'api_response_message':email_list,
                                                 'datatable_row': datatable_row, 'name':name})
-  except:
-    messages.error(request, 'Error occured in PNR number')
-    return redirect('view_email')
+#   except:
+#     messages.error(request, 'Error occured in PNR number')
+#     return redirect('view_email')
 
 
 @login_required
