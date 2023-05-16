@@ -1,0 +1,177 @@
+{% extends 'base_template.html' %}
+
+{% block content %}
+
+<div class="pagetitle">
+    <h1>View/Update Priority</h1>
+  </div><!-- End Page Title -->
+  <br>
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <br>
+            {% for message in messages %}
+                   <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                       {{ message }}
+                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>
+           {% endfor %}
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Airline</th>
+                  <th scope="col">Travel Agency</th>
+                  <th scope="col">Others</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
+                  
+                </tr>
+              </thead>
+              <!-- ri-close-circle-line
+              ri-checkbox-circle-fill -->
+              <tbody>
+                {% for i in row_list %}
+                
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{i.key}}</td>
+                    <td>{% if i.airline == True %}
+                      <i class="ri-checkbox-circle-fill" style="color: green;"></i>
+                      {% else %}
+                      <i class="ri-close-circle-fill" style="color: red;"></i>
+                      {% endif %}
+                    </td>
+
+                    <td>{% if i.travel_agency == True %}
+                      <i class="ri-checkbox-circle-fill" style="color: green;"></i>
+                      {% else %}
+                      <i class="ri-close-circle-fill" style="color: red;"></i>
+                      {% endif %}</td>
+
+                    <td>{% if i.others == True %}
+                      <i class="ri-checkbox-circle-fill" style="color: green;"></i>
+                      {% else %}
+                      <i class="ri-close-circle-fill" style="color: red;"></i>
+                      {% endif %}</td>
+
+                    <td>{% if i.status == True %}
+                      <i class="ri-checkbox-circle-line" style="color: green;"> Active</i>
+                      {% else %}
+                      <i class="ri-close-circle-line" style="color: red;"> Not active</i>
+                      {% endif %}</td>
+                    <td>  
+                    <!-- Vertically centered Modal -->
+              <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#verticalycentered{{ forloop.counter }}">
+                <i class="bi bi-pen"></i> Update
+              </button>
+              <div class="modal fade" id="verticalycentered{{ forloop.counter }}" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  
+                  <div class="modal-content">
+                    <form method="post">
+                      {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title"><b>Update the details</b></h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                      
+
+                        <div class="row mb-3">
+                          <div class="col-sm-10">
+                            <input type="email" class="form-control" name="key" value="{{i.key}}" hidden>
+                          </div>
+                        </div>
+                        
+                        <label for="inputText" class="col-sm-4 col-form-label" >Customer Email</label>
+                        <div class="row mb-3">
+                          
+                          <div class="col-sm-12">
+                            <input type="email" class="form-control" value="{{i.key}}" name="email">
+                          </div>
+                        </div>
+
+                        <label class="col-sm-4 col-form-label">Select Priority</label>
+                        <div class="row mb-3">
+                          <div class="col-sm-12">
+                            <select class="form-select" name="priority_value" aria-label="Default select example">
+                              {% if i.airline == True %}
+                              <option value="Airline" selected>Airline</option>
+                              <option value="Travel_agency">Travel Agency</option>
+                              <option value="Others">Others</option>
+                              {% elif i.travel_agency == True %}
+                              <option value="Airline" >Airline</option>
+                              <option value="Travel_agency" selected>Travel Agency</option>
+                              <option value="Others">Others</option>
+                              {% elif i.others == True %}
+                              <option value="Airline" >Airline</option>
+                              <option value="Travel_agency" >Travel Agency</option>
+                              <option value="Others" selected>Others</option>
+
+                              {% endif %}
+                            </select>
+                          </div>
+                        </div>
+
+
+                        <label class="col-sm-4 col-form-label">Select Status</label>
+                        <div class="row mb-3">
+                          <div class="col-sm-12">
+                            <select class="form-select" name="status_value" aria-label="Default select example">
+                              {% if i.status == True %}
+                              <option value="True" selected>Active</option>
+                              <option value="False">Not Active</option>
+                              
+                              {% elif i.status == False %}
+                              <option value="True" >Active</option>
+                              <option value="False" selected>Not Active</option>
+                              
+                              {% endif %}
+                            </select>
+                          </div>
+                        </div>
+
+                      
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" name="update_button" class="btn btn-primary">Save changes</button>
+                      
+                    </div>
+                  
+                  </div>
+                </form>
+                </div>
+              </div>
+                    
+                   
+                  
+                  
+                  
+                  
+                  </td>
+        
+                </tr>
+                
+                {% endfor %}
+                
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  {% endblock %}

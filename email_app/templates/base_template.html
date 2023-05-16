@@ -27,6 +27,7 @@
   <link href="{% static 'assets/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/simple-datatables/style.css' %}" rel="stylesheet">
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -135,7 +136,21 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed"  href="{% url 'add_pnr' %}">
-          <i class="bi bi-menu-button-wide"></i><span>Add/Update Email</span>
+          <i class="bi bi-menu-button-wide"></i><span>Add/Update PNR</span>
+        </a>
+    
+      </li><!-- End Components Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed"  href="{% url 'add_priority' %}">
+          <i class="bi bi-layout-text-window-reverse"></i><span>Add New Priority</span>
+        </a>
+    
+      </li><!-- End Components Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed"  href="{% url 'view_priority' %}">
+          <i class="bi bi-journal-text"></i><span>View/Update Priority</span>
         </a>
     
       </li><!-- End Components Nav -->

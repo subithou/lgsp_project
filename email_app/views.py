@@ -184,6 +184,144 @@ def add_pnr(request):
     return render(request, 'add_pnr.html',{'name':name})
 
 
+@login_required
+def add_priority(request):
+    current_user = request.user
+    name = current_user.first_name + " "+ current_user.last_name
+    
+    if request.method == 'POST':
+        customer_email = str(request.POST.get('customer_email'))
+        priority_value = str(request.POST.get('priority'))
+        status = str(request.POST.get('status_value'))
+        if status == 'True':
+            status = True
+        else :
+            status = False
+
+        datatable_id = '195025c1-95e9-4f8c-a2e1-bc3ea300c1c4'
+        datatable_row = get_rows(datatable_id)
+        api_instance = PureCloudPlatformClientV2.ArchitectApi(api_client)
+
+        for i in datatable_row.entities:
+            print(i.get('key'))
+            row_id = i.get('key')
+            showbrief = False
+            api_row_info = api_instance.get_flows_datatable_row(datatable_id, row_id, showbrief=showbrief)
+            exist_email_id = api_row_info.get('key')
+            exist_status = api_row_info.get('status')
+
+            if exist_email_id == customer_email and exist_status == True:
+                messages.error(request, 'Email Already exist, So cannot add as new one')
+                return redirect('add_priority')
+
+            else:
+                if priority_value == 'Airline':
+                    data_table_row = {
+                        'airline': True,
+                        'travel_agency': False,
+                        'others': False,
+                        'status': status,
+                        'key': customer_email
+                    }
+                elif priority_value == 'Travel_agency':
+                    data_table_row = {
+                        'airline': False,
+                        'travel_agency': True,
+                        'others': False,
+                        'status': status,
+                        'key': customer_email
+                    }
+                else:
+                    data_table_row = {
+                        'airline': False,
+                        'travel_agency': False,
+                        'others': True,
+                        'status': status,
+                        'key': customer_email
+                    }
+                try:
+                    # Create a new row entry for the datatable.
+                    
+                    api_response = api_instance.post_flows_datatable_rows(datatable_id, data_table_row)
+                    messages.error(request, 'Successfully Added')
+                    return redirect('add_priority')
+                except ApiException as e:
+                    print("Exception when calling ArchitectApi->post_flows_datatable_rows: %s\n" % e)
+
+    return render(request, 'add_priority.html')
+
+
+def view_priority(request):
+    current_user = request.user
+    name = current_user.first_name + " "+ current_user.last_name
+    
+
+    datatable_id = '195025c1-95e9-4f8c-a2e1-bc3ea300c1c4'
+    datatable_row = get_rows(datatable_id)
+
+    api_instance = PureCloudPlatformClientV2.ArchitectApi(api_client)
+
+    
+    row_list = []
+    for i in datatable_row.entities:
+        
+        row_id = i.get('key')
+        showbrief = False
+        api_row_info = api_instance.get_flows_datatable_row(datatable_id, row_id, showbrief=showbrief)
+        row_list.append(api_row_info)
+
+    if 'update_button' in request.POST:
+        key = str(request.POST.get('key'))
+        email = str(request.POST.get('email'))
+        priority_value = str(request.POST.get('priority_value'))
+        status = str(request.POST.get('status_value'))
+        if status == 'True':
+            status = True
+        else :
+            status = False
+
+        print(key,email, priority_value, status)
+        api_instance_1 = PureCloudPlatformClientV2.ArchitectApi(api_client)
+        # datatable_id = 'datatable_id_example' # str | id of datatable
+                # row_id = 'row_id_example' # str | the key for the row
+        if priority_value == 'Airline':
+            data_table_row = {
+                        'airline': True,
+                        'travel_agency': False,
+                        'others': False,
+                        'status': status,
+                        'key': email
+                    }
+        elif priority_value == 'Travel_agency':
+            data_table_row = {
+                        'airline': False,
+                        'travel_agency': True,
+                        'others': False,
+                        'status': status,
+                        'key': email
+                    }
+        else:
+            data_table_row = {
+                        'airline': False,
+                        'travel_agency': False,
+                        'others': True,
+                        'status': status,
+                        'key': email
+                    }
+        
+        row_id = key
+        api_response_1 = api_instance_1.put_flows_datatable_row(datatable_id, row_id, body=data_table_row)
+        messages.error(request, 'Successfully Updated')
+        return redirect('view_priority')
+       
+
+    # print(row_list)
+    return render(request, 'view_priority.html',{'row_list': row_list})
+
+
+
+
+
 def login_page(request):
     if request.method == 'POST':
         username1 = request.POST.get('username')

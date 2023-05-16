@@ -32,7 +32,7 @@
               <tbody>
                 {% for i in row_list %}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{ forloop.counter }}</th>
                     <td>{{i.pnr}}</td>
                     <td>{{i.sender_emailid}}</td>
                     <td><a href="{% url 'lgsp_email' pnr=i.pnr %}"><button type="button" class="btn btn-success btn-sm"><i class="bi bi-eye btn-sm"></i>  View </button></a></td>
