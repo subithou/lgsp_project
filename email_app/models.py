@@ -110,5 +110,3 @@ class AuthenticationBackend(BaseBackend):
         except MyUser.DoesNotExist:
             return None
 
-
-class 
