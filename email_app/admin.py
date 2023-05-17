@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from email_app.models import MyUser
+from email_app.models import MyUser, agent_work_record, agent_login_record
 
 
 class UserCreationForm(forms.ModelForm):
@@ -84,3 +84,15 @@ admin.site.register(MyUser, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
+
+@admin.register(agent_work_record)
+class Agent_work_record(admin.ModelAdmin):
+    list_display = ('user_id','user_name', 'work_record',  'date_time')
+
+
+@admin.register(agent_login_record)
+class Agent_login_record(admin.ModelAdmin):
+    list_display = ('user_id','user_name', 'work_record',  'date_time')
+
+
+    

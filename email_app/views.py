@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-
+from email_app.models import agent_work_record, agent_login_record
 api_client = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token('682b4a94-5e61-4219-b399-e52764c8da30','9c7Op9xuqC2NXlgUfXywP5YyClYzEbhu_FChShRQOtY')
 
 
@@ -159,7 +159,10 @@ def add_pnr(request):
                 } # object | datatable row (optional)
                 try:
                     api_response = api_instance.put_flows_datatable_row(datatable_id, row_id, body=body)
+                    agent_work_record.objects.create(user_id=current_user.username,user_name=name,work_record="Updated PNR:"+new_pnr)
+
                     messages.error(request, 'Successfully Updated')
+                    # agent_work_record.create(user_id=)
                     return redirect('view_email')
                 except :
                     # messages.error(request, 'Please provide correct input')
@@ -174,6 +177,8 @@ def add_pnr(request):
                 try:
                     # Create a new row entry for the datatable.
                     api_response = api_instance.post_flows_datatable_rows(datatable_id, data_table_row)
+                    agent_work_record.objects.create(user_id=current_user.username,user_name=name,work_record="Inserted new PNR:"+new_pnr)
+
                     messages.error(request, 'Successfully Updated')
                     return redirect('view_email')
                 except ApiException as e:
@@ -188,6 +193,9 @@ def add_pnr(request):
 def add_priority(request):
     current_user = request.user
     name = current_user.first_name + " "+ current_user.last_name
+    print(current_user.id)
+    print(current_user.username)
+    print(current_user.first_name)
     
     if request.method == 'POST':
         customer_email = str(request.POST.get('customer_email'))
@@ -203,7 +211,7 @@ def add_priority(request):
         api_instance = PureCloudPlatformClientV2.ArchitectApi(api_client)
 
         for i in datatable_row.entities:
-            print(i.get('key'))
+            # print(i.get('key'))
             row_id = i.get('key')
             showbrief = False
             api_row_info = api_instance.get_flows_datatable_row(datatable_id, row_id, showbrief=showbrief)
@@ -244,6 +252,7 @@ def add_priority(request):
                     
                     api_response = api_instance.post_flows_datatable_rows(datatable_id, data_table_row)
                     messages.error(request, 'Successfully Added')
+                    agent_work_record.objects.create(user_id=current_user.username,user_name=name,work_record="insert record in priority, email: "+customer_email)
                     return redirect('add_priority')
                 except ApiException as e:
                     print("Exception when calling ArchitectApi->post_flows_datatable_rows: %s\n" % e)
@@ -275,6 +284,7 @@ def view_priority(request):
         email = str(request.POST.get('email'))
         priority_value = str(request.POST.get('priority_value'))
         status = str(request.POST.get('status_value'))
+        cpystatus = status
         if status == 'True':
             status = True
         else :
@@ -311,6 +321,8 @@ def view_priority(request):
         
         row_id = key
         api_response_1 = api_instance_1.put_flows_datatable_row(datatable_id, row_id, body=data_table_row)
+        agent_work_record.objects.create(user_id=current_user.username,user_name=name,work_record="updated record in priority, email: "+email+priority_value+cpystatus)
+
         messages.error(request, 'Successfully Updated')
         return redirect('view_priority')
        
@@ -334,6 +346,10 @@ def login_page(request):
 
             login(request, user)
             # Redirect to a success page.
+            current_user = request.user
+            name = current_user.first_name + " "+ current_user.last_name
+            agent_login_record.objects.create(user_id=current_user.username,user_name=name,work_record="Logged in")
+
             return redirect('view_email')
         else:
             messages.error(request, 'Invalid username or password')
@@ -344,7 +360,11 @@ def login_page(request):
 
 @login_required
 def log_out(request):
+    current_user = request.user
+    name = current_user.first_name + " "+ current_user.last_name
     logout(request)
+    agent_login_record.objects.create(user_id=current_user.username,user_name=name,work_record="Logout")
+
     return HttpResponseRedirect('/')
     
 

@@ -110,3 +110,15 @@ class AuthenticationBackend(BaseBackend):
         except MyUser.DoesNotExist:
             return None
 
+
+class agent_work_record(models.Model):
+    user_id = models.CharField(max_length=200)
+    user_name = models.CharField(max_length=200)
+    work_record = models.CharField(max_length=200)
+    date_time = models.DateTimeField(auto_now_add=True)
+
+class agent_login_record(models.Model):
+    user_id = models.CharField(max_length=200)
+    user_name = models.CharField(max_length=200)
+    work_record = models.CharField(max_length=200)
+    date_time = models.DateTimeField(auto_now_add=True)
