@@ -58,21 +58,21 @@ def lgsp_email(request, pnr):
   
 
     for i in datatable_row.entities:
-        print(i)
-        print(i.get('key'))
+        # print(i)
+        # print(i.get('key'))
         row_id = i.get('key')
         showbrief = False
         api_row_info = api_instance.get_flows_datatable_row(datatable_id, row_id, showbrief=showbrief)
         test_pnr = api_row_info.get('pnr')
         cleaned_pnr = test_pnr.strip()
-        print("cleaned pnr:"+cleaned_pnr)
-        print("pnr:"+pnr)
+        # print("cleaned pnr:"+cleaned_pnr)
+        # print("pnr:"+pnr)
         if pnr == cleaned_pnr:
-            print(True)
+            # print(True)
          # same_pnr_list.append([api_row_info['conversation_id'], api_row_info['message_id'], api_row_info['pnr']])
             same_pnr_list.append(api_row_info)
-            print(api_row_info)
-            print(api_row_info.get('conversation_id'))
+            # print(api_row_info)
+            # print(api_row_info.get('conversation_id'))
             conversation_id = api_row_info.get('key')
             # message_id = api_row_info.get('message_id')
 
@@ -86,9 +86,9 @@ def lgsp_email(request, pnr):
                     api_response_message = api_message_instance.get_conversations_email_message(conversation_id, msg_id)
                     all_message_id.append(api_response_message)
             # email_list.append(api_response_message)
-            print(all_message_id)
+            # print(all_message_id)
             email_list.append(all_message_id)
-    print(same_pnr_list)
+    print(email_list)
     return render(request, 'email_structure.html',{'api_response_message':email_list,
                                                 'datatable_row': datatable_row, 'name':name})
 #   except:
@@ -248,7 +248,7 @@ def add_priority(request):
                 except ApiException as e:
                     print("Exception when calling ArchitectApi->post_flows_datatable_rows: %s\n" % e)
 
-    return render(request, 'add_priority.html')
+    return render(request, 'add_priority.html', {'name':name})
 
 
 def view_priority(request):
@@ -316,7 +316,7 @@ def view_priority(request):
        
 
     # print(row_list)
-    return render(request, 'view_priority.html',{'row_list': row_list})
+    return render(request, 'view_priority.html',{'row_list': row_list, 'name':name})
 
 
 
