@@ -109,3 +109,6 @@ class AuthenticationBackend(BaseBackend):
             return MyUser.objects.get(pk=user_id)
         except MyUser.DoesNotExist:
             return None
+
+
+class 

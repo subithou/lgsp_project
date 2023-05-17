@@ -68,7 +68,7 @@
                       {% endif %}</td>
                     <td>  
                     <!-- Vertically centered Modal -->
-              <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#verticalycentered{{ forloop.counter }}">
+              <button type="button" class="btn btn-sm btn-success " data-bs-toggle="modal" data-bs-target="#verticalycentered{{ forloop.counter }}">
                 <i class="bi bi-pen"></i> Update
               </button>
               <div class="modal fade" id="verticalycentered{{ forloop.counter }}" tabindex="-1">
@@ -95,7 +95,9 @@
                         <div class="row mb-3">
                           
                           <div class="col-sm-12">
-                            <input type="email" class="form-control" value="{{i.key}}" name="email">
+                            
+                            <input type="email" class="form-control" value="{{i.key}}" name="email" readonly>
+                            <h6 style="color: red;">* Email ID cannot change</h6>
                           </div>
                         </div>
 
