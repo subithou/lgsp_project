@@ -1,5 +1,4 @@
 # lgsp_project (Python Django - Genesys Cloud CX)
--------------------------------------------------
 
 Idea
 ----
