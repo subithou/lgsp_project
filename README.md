@@ -1,4 +1,4 @@
-# lgsp_project (Python Django - Genesys Cloud CX)
+# Web application integrated with Genesys Cloud CX (Python Django - Genesys Cloud CX)
 
 Idea
 ----
@@ -12,7 +12,8 @@ Requirements
 Solution & Skills used
 ----------------------
 We developed our solution on Genesys Cloud platform and custom web application.
-•	Genesys Cloud Platform
+
+**•	Genesys Cloud Platform**
   1. Architect 
     * To create inbound email flow and priority routing 
     * Fetching the customer details along with priority from the data table.
