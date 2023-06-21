@@ -3,6 +3,7 @@
 Idea
 ----
 Grouping emails based on PNR (Passenger Name Record) and Priority routing of valued customers like Airline, Travel Agency.
+
 Requirements
 ------------
   1.	Genesys CX 2 digital License 
